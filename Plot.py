@@ -137,7 +137,7 @@ class Plot(Camera_Thread, Motor):
             if data_motor2_temp:
                 self.data_motor2 = data_motor2_temp
                 # print(self.data_motor2)
-                self.save_data.write(self.data_motor2 + dt_ms + '\n')
+                # self.save_data.write(self.data_motor2 + dt_ms + '\n')
                 self.label_distance_Motor2.setText(self.data_motor2)
                 self.data_motor2 = float(self.data_motor2)
                 #   绘制图形
@@ -181,4 +181,4 @@ class Plot(Camera_Thread, Motor):
             self.img_F_plot[:-1] = self.img_F_plot[1:]
             self.img_F_plot[-1] = temp_F
             # 数据填充到绘制曲线中
-            self.curve_y.setData(self.img_y_plot)
+            self.curve_F.setData(self.img_F_plot)

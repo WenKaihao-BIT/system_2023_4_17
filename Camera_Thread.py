@@ -16,7 +16,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
     def __init__(self):
         super(Camera_Thread, self).__init__()
         self.Camera_Parameter = None
-        self.cap_vedio = None
+        self.cap_video = None
         self.Camera_ID = '0'
         # 目标中心点 (cx,cy)
         self.cx = 0
@@ -79,8 +79,8 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
             self.threshold_gray = chekbox.value()
             self.label_information.setText("threshold_gray :" + str(self.threshold_gray))
         if chekbox.id == "Area_threshold":
-            self.threshold_gray = chekbox.value()
-            self.label_information.setText("threshold_gray :" + str(self.threshold_gray))
+            self.threshold_area = chekbox.value()
+            self.label_information.setText("threshold_Area :" + str(self.threshold_area))
         if chekbox.id == "Pixel Value Distance":
             self.pixel_to_distance = chekbox.text()
             self.k_F = self.k_F = float(self.pixel_to_distance) * float(self.distance_to_F)
@@ -112,7 +112,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         """
         if not self.flag_camera:
             # 打开相机
-            self.cap_vedio = cv2.VideoCapture(int(self.Camera_ID))  # 可注释cv2.CAP_DSHOW
+            self.cap_video = cv2.VideoCapture(int(self.Camera_ID))  # 可注释cv2.CAP_DSHOW
             # 触发信号
             self.Signal_Camera.connect(self.show_vedio)
             # 开启进程
@@ -122,7 +122,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
             self.label_information.setText("camera open success!")
         else:
             # 关闭相机进程
-            self.cap_vedio.release()
+            self.cap_video.release()
             self.exec()
             self.label_image1.clear()
             self.label_image2.clear()
@@ -139,7 +139,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         :return: None
         """
         # print(msg)
-        ret, self.img = self.cap_vedio.read()
+        ret, self.img = self.cap_video.read()
         if ret:
             self.show_cv_img(self.img)
             self.image_processing(self.img)
@@ -173,7 +173,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         :return: None
         """
         # img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img_processed, self.Camera.cx, self.Camera.cy = FindTarget(img, self.threshold_gray, self.threshold_area)
+        img_processed, self.cx, self.cy = FindTarget(img, self.threshold_gray, self.threshold_area)
         shrink = cv2.cvtColor(img_processed, cv2.COLOR_BGR2RGB)
         QtImg = QtGui.QImage(shrink.data,
                              shrink.shape[1],

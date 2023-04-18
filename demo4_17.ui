@@ -325,7 +325,7 @@
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <widget class="QWidget" name="tab_7">
                  <attribute name="title">
@@ -1763,7 +1763,7 @@
                  <string notr="true">background-color: rgb(185, 185, 185);</string>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <widget class="QWidget" name="tab_4">
                  <attribute name="title">
@@ -1887,9 +1887,9 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>15</pointsize>
-                      <weight>50</weight>
-                      <bold>false</bold>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="frameShape">
@@ -1957,7 +1957,9 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>15</pointsize>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="frameShape">
@@ -2019,7 +2021,9 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>15</pointsize>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="frameShape">
@@ -2081,7 +2085,9 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>15</pointsize>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="frameShape">

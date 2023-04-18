@@ -131,8 +131,8 @@ class Motor(Ui_MainWindow):
 
     def EnableMotor1(self, state):
         if not state:
-            if self.flag_motor1:
-                self.ser_motor1.close_port()
+            # if self.flag_motor1:
+            self.ser_motor1.close_port()
             self.flag_motor1 = False
             self.label_information.setText("Motor1 not enable !")
         if state:
@@ -144,24 +144,23 @@ class Motor(Ui_MainWindow):
                 self.label_information.setText("Motor1 enable success !")
                 # the function #
             else:
-
                 self.label_information.setText("Motor1 enable fail !")
         # print(self.flag_motor1)
     def EnableMotor2(self, state):
         if not state:
-            if self.flag_motor2:
-                self.Serial.close_port()
-            self.flag_motor1 = False
+            # if self.flag_motor2:
+            self.ser_motor2.close_port()
+            self.flag_motor2 = False
             self.label_information.setText("Motor2 not enable !")
         if state:
             if self.ser_motor2.enable_port():
                 self.flag_motor2 = True
                 # self.ser_motor2.enable_port()
-                self.Serial.enable_port()
+                self.ser_motor2.enable_port()
                 # 电机2初始化
                 # self.ser_motor2.send = '\0\r'
                 # self.ser_motor2.senddata('\0\r')
-                self.Serial.senddata('\0\r')
+                self.ser_motor2.senddata('\0\r')
                 self.label_information.setText("Motor2 enable success !")
             else:
                 self.label_information.setText("Motor2 enable fail !")
@@ -192,10 +191,25 @@ class Motor(Ui_MainWindow):
         # print(self.data_motor1)
         # self.ser_motor2.send = 'PFB<D8>\r'
         # self.ser_motor2.senddata('PFB<D8>\r')
-        self.Serial.senddata('PFB<D8>\r')
+        self.ser_motor2.senddata('PFB<D8>\r')
         # self.data_motor2 = self.ser_motor2.receivedata()
         # time.sleep(0.01)
-        self.data_motor2 = self.Serial.receivedata()
+        self.data_motor2 = self.ser_motor2.receivedata()
         data_motor2_temp = self.DataAnlysis(self.data_motor2, 'PFB<D8>')
         print('\n\n' + self.data_motor2 + '\n' + self.data_motor2.encode().hex() + '\n' + data_motor2_temp + '\n\n')
         # print('\n\n'+self.data_motor2+'\n\n')
+
+    def DataAnlysis(self, data, head):
+        data2 = data.split('\n')
+        matched_index = -1
+        i = 0
+        length = len(data2)
+        while i < length:
+            if head + '\r' == data2[i]:
+                matched_index = i
+                break
+            i = i + 1
+        if matched_index != -1:
+            data3 = data2[matched_index + 1].split(' ')[0]
+            return data3
+        return 'error'

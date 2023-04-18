@@ -10,7 +10,7 @@ def FindTarget(img, threshold_gray=100, threshold_area=10000):
     binary_G = cv2.GaussianBlur(binary, (3, 3), 15)
     # cv2.imshow("binary_G", binary_G)
     # 获取轮廓  cv2.RETR_EXTERNAL   cv2.RETR_TREE
-    contours, hierarchy = cv2.findContours(binary_G, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    img_1,contours, hierarchy = cv2.findContours(binary_G, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     # # 画出轮廓
     draw_img = img.copy()
     for i, contour in enumerate(contours):

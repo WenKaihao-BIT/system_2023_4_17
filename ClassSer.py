@@ -15,13 +15,10 @@ class serial_port(object):
             # print("找不到串口")
             return False
         return True
-
-
     def close_port(self):
         self.ser.close()
     def senddata(self,data):
         self.ser.write(data.encode('utf-8'))
-
     def receivedata(self):
         # self.receive = self.ser.readline()
         # receive = self.ser.read_all()
