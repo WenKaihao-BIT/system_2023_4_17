@@ -21,9 +21,11 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         # 目标中心点 (cx,cy)
         self.cx = 0
         self.cy = 0
-        self.flag_camera = 0
+        self.flag_camera = False
+        self.flag_CenterSet = False
         self.img = []
         self.x_center = 400
+        self.y_center = 400
         # 此处K包含两部分（像素->距离，距离->力）
         self.pixel_to_distance = 10  # 单位为微牛
         # 距离->力的比例系数
@@ -47,7 +49,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         self.pushButton_camera.clicked.connect(self.OpenCamera)
         self.Camera_Parameter = {'Camera_ID': self.spinBox_Camera_select, 'Max_threshold': self.horizontalSlider_max,
                                  'Area_threshold': self.horizontalSlider_area,'Pixel Value Distance':self.lineEdit_p_to_d,
-                                 'Force Coefficient':self.lineEdit_d_to_f}
+                                 'Force Coefficient':self.lineEdit_d_to_f,'CenterSet':self.pushButton_CenterSet}
         self.Camera_Parameter["Camera_ID"].id = "Camera_ID"
         self.Camera_Parameter["Camera_ID"].valueChanged['QString'].connect(self.ReadParameter)
         self.Camera_Parameter["Max_threshold"].id = "Max_threshold"
@@ -58,6 +60,8 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         self.Camera_Parameter["Pixel Value Distance"].editingFinished.connect(self.ReadParameter)
         self.Camera_Parameter["Force Coefficient"].id = "Force Coefficient"
         self.Camera_Parameter["Force Coefficient"].editingFinished.connect(self.ReadParameter)
+        self.Camera_Parameter["CenterSet"].id = "CenterSet"
+        self.Camera_Parameter["CenterSet"].clicked.connect(self.CenterSet)
         pass
 
     def ReadParameter(self):
@@ -106,14 +110,14 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
 
         :return: None
         """
-        if self.flag_camera == 0:
+        if not self.flag_camera:
             # 打开相机
             self.cap_vedio = cv2.VideoCapture(int(self.Camera_ID))  # 可注释cv2.CAP_DSHOW
             # 触发信号
             self.Signal_Camera.connect(self.show_vedio)
             # 开启进程
             self.start()
-            self.flag_camera = 1
+            self.flag_camera = True
             self.pushButton_camera.setText("Close")
             self.label_information.setText("camera open success!")
         else:
@@ -123,7 +127,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
             self.label_image1.clear()
             self.label_image2.clear()
             self.pushButton_camera.setText("Open")
-            self.flag_camera = 0
+            self.flag_camera = False
             self.label_information.setText("close success!")
         pass
 
@@ -181,11 +185,30 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
 
         self.label_image2.setPixmap(jpg_out)
 
+    def CenterSet(self):
+        """
+        设置位移中心
+
+        :return: None
+        """
+        if not self.flag_CenterSet:
+            self.flag_CenterSet=True
+            self.x_center = self.cx
+            self.y_center = self.cy
+            self.label_Center.setText('['+str(self.x_center)+','+str(self.y_center)+']')
+            self.pushButton_CenterSet.setText("Setting")
+            self.label_information.setText("Setting Center!")
+        else:
+            self.flag_CenterSet = False
+            self.pushButton_CenterSet.setText("Set")
+            self.label_information.setText("Unset Center!")
+        pass
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
-    Camera = Camera_Thread(MainWindow)
+    Camera = Camera_Thread()
     MainWindow.show()
     print(Camera.Camera_ID)
     sys.exit(app.exec_())

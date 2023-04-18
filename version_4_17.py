@@ -23,9 +23,9 @@ from Camera_Thread import Camera_Thread
 from Image_process import FindTarget
 from window_ui import *
 from Motor import *
+from Plot import Plot
 
-
-class MyMainWindow(Camera_Thread,Motor,Ui_MainWindow):
+class MyMainWindow(Plot,Camera_Thread,Motor,Ui_MainWindow):
     def __init__(self,MainWindow):
 
 

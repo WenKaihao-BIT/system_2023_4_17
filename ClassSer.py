@@ -12,7 +12,7 @@ class serial_port(object):
             self.ser = serial.Serial(self.port, self.rate, timeout=0.02)
             self.ser.flushInput()
         except IOError:
-            print("找不到串口")
+            # print("找不到串口")
             return False
         return True
 
