@@ -2,7 +2,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 import cv2
 import time
 
-from Image_process import FindTarget
+from Image_process2 import FindTarget
 from window_ui import *
 
 ## 存在问题 ：关闭线程出现问题

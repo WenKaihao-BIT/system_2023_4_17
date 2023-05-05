@@ -33,43 +33,6 @@ class MyMainWindow(Plot,ControlFunction, Camera_Thread, Motor, Ui_MainWindow):
         super(MyMainWindow, self).__init__()
         # self.button_connect()
 
-    def button_connect(self):
-        self.spinBox_Motor1_select.valueChanged['QString'].connect(self.Read_Motor1)
-        self.spinBox_Motor2_select.valueChanged['QString'].connect(self.Read_Motor2)
-        self.spinBox_Motor3_select.valueChanged['QString'].connect(self.Read_Motor3)
-        self.checkBox_Motor1.stateChanged.connect(self.EnableMotor1)
-        self.checkBox_Motor2.stateChanged.connect(self.EnableMotor2)
-        self.checkBox_Motor3.stateChanged.connect(self.EnableMotor3)
-        self.checkBox_Light.stateChanged.connect(self.EnableLight)
-        self.verticalSlider_Light.valueChanged.connect(self.LightChange)
-
-        # motor move
-        self.lineEdit_Motor1.editingFinished.connect(self.ReadText_motor1)
-        self.lineEdit_Motor2.editingFinished.connect(self.ReadText_motor2)
-        self.lineEdit_Motor3.editingFinished.connect(self.ReadText_motor3)
-        # add/reduce
-        self.pushButton_Motor1_Add.clicked.connect(self.motor1_PR)
-        self.pushButton_Motor1_Reduce.clicked.connect(self.motor1_PR_reverse)
-        self.pushButton_Motor2_Add.clicked.connect(self.motor2_PR)
-        self.pushButton_Motor2_Reduce.clicked.connect(self.motor2_PR_reverse)
-        self.timer_read.timeout.connect(self.position_requset)
-
-        ## plot enable
-        self.pushButton_Enable.clicked.connect(self.plot_enable)
-        self.timer_plot.timeout.connect(self.update_data)
-        # sin 函数
-        self.checkBox_sin.stateChanged.connect(self.SinDataSend)
-        self.checkBox_Adaptive.stateChanged.connect(self.SinRun)
-        self.checkBox_Sine_F.stateChanged.connect(self.sin_F_swap)
-        self.checkBox_user.stateChanged.connect(self.UserDefine)
-        self.checkBox_Random.stateChanged.connect(self.M_randam)
-        self.wave = []
-        self.wave_len = 0
-
-        # send
-        self.timer_send.timeout.connect(self.sindata)
-        pass
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

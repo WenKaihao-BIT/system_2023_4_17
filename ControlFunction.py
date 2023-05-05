@@ -20,7 +20,7 @@ class ControlFunction(Motor, Ui_MainWindow):
         self.sin_F = 1
         self.sin_D = 0
         self.sin_B = 0
-        self.lineEdit_sin = {'A': self.lineEdit_A, 'F': self.lineEdit_F, 'D': self.lineEdit_D, 'DB': self.lineEdit_B}
+        self.lineEdit_sin = {'A': self.lineEdit_A, 'F': self.lineEdit_F, 'D': self.lineEdit_D, 'B': self.lineEdit_B}
         for key, item in self.lineEdit_sin.items():
             item.id = key
             item.editingFinished.connect(self.sin_get)
