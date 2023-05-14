@@ -119,12 +119,13 @@ class Motor(Ui_MainWindow):
             self.ser_motor1.senddata(ser_motor1_send)
             self.label_information.setText("Motor1 move: -" + str(self.step_motor1))
         if chekbox.id == 'motor2_StepADD':
-            temp = 'MOVEINC ' + str(self.step_motor2) + ' 2'
+            pos_and_v = str(self.step_motor2)
+            temp = 'MOVEINC ' + pos_and_v[0] + pos_and_v[1]
             ser_motor2_send = temp + '<' + self.checksum(temp) + '>\r'
             self.ser_motor2.senddata(ser_motor2_send)
             self.label_information.setText("Motor2 move:" + str(self.step_motor2))
         if chekbox.id == 'motor2_StepReduce':
-            temp = 'MOVEINC -' + str(self.step_motor2) + ' 2'
+            temp = 'MOVEINC -' + pos_and_v[0] + pos_and_v[1]
             ser_motor2_send = temp + '<' + self.checksum(temp) + '>\r'
             self.ser_motor2.senddata(ser_motor2_send)
             self.label_information.setText("Motor2 move:-" + str(self.step_motor2))

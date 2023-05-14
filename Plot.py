@@ -153,32 +153,47 @@ class Plot(Camera_Thread, Motor):
         # 图形 x轴坐标
         if len(self.img_x_plot) < 150:
             self.curve_x.setData(self.img_x_plot)
-            self.img_x_plot = np.append(self.img_x_plot, self.cx)
+            # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
+            if abs(self.cx - self.img_x_plot[-1]) < 2:
+                self.img_x_plot = np.append(self.img_x_plot, self.img_x_plot[-1])
+            else:
+                self.img_x_plot = np.append(self.img_x_plot, self.cx)
 
         else:
             self.img_x_plot[:-1] = self.img_x_plot[1:]
-            self.img_x_plot[-1] = self.cx
+            if abs(self.cx - self.img_x_plot[-1]) > 2:
+                self.img_x_plot[-1] = self.cx
             # 数据填充到绘制曲线中
             self.curve_x.setData(self.img_x_plot)
         # 图形 y轴坐标
         if len(self.img_y_plot) < 150:
             self.curve_y.setData(self.img_y_plot)
-            self.img_y_plot = np.append(self.img_y_plot, self.cy)
+            # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
+            if abs(self.cy - self.img_y_plot[-1]) < 2:
+                self.img_y_plot = np.append(self.img_y_plot, self.img_y_plot[-1])
+            else:
+                self.img_y_plot = np.append(self.img_y_plot, self.cy)
 
         else:
             self.img_y_plot[:-1] = self.img_y_plot[1:]
-            self.img_y_plot[-1] = self.cy
+            if abs(self.cy - self.img_y_plot[-1]) > 2:
+                self.img_y_plot[-1] = self.cy
             # 数据填充到绘制曲线中
             self.curve_y.setData(self.img_y_plot)
         # 力图像
         if len(self.img_F_plot) < 150:
             self.curve_F.setData(self.img_F_plot)
-            temp_F = (self.cx-self.x_center)*self.k_F
-            self.img_F_plot = np.append(self.img_F_plot, temp_F)
+            temp_F = (self.cx - self.x_center) * self.k_F
+            # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
+            if abs(temp_F - self.img_F_plot[-1]) < 1 * self.k_F:
+                self.img_F_plot = np.append(self.img_F_plot, self.img_F_plot[-1])
+            else:
+                self.img_F_plot = np.append(self.img_F_plot, temp_F)
 
         else:
             temp_F = (self.cx - self.x_center) * self.k_F
             self.img_F_plot[:-1] = self.img_F_plot[1:]
-            self.img_F_plot[-1] = temp_F
+            if abs(temp_F - self.img_F_plot[-1]) > 1 * self.k_F:
+                self.img_F_plot[-1] = temp_F
             # 数据填充到绘制曲线中
             self.curve_F.setData(self.img_F_plot)
