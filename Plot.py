@@ -9,7 +9,7 @@ from Motor import Motor
 import numpy as np
 import datetime
 from Camera_Thread import Camera_Thread
-
+import time
 
 class Plot(Camera_Thread, Motor):
     def __init__(self):
@@ -19,7 +19,10 @@ class Plot(Camera_Thread, Motor):
         self.curve_x = None
         self.curve_motor2 = None
         self.curve_motor1 = None
+        self.curve_strain = None
         self.flag_plot = False
+        self.flag_save = False
+        self.file = None
 
         self.motor1_plot = np.array([0])
         self.motor1_position = np.array([0])
@@ -28,6 +31,7 @@ class Plot(Camera_Thread, Motor):
         self.img_x_plot = np.array([0])
         self.img_y_plot = np.array([0])
         self.img_F_plot = np.array([0])
+        self.img_strain_plot = np.array([0])
 
         self.background_init()
         # 绘制图像时钟
@@ -36,6 +40,7 @@ class Plot(Camera_Thread, Motor):
 
         # enable button
         self.pushButton_Enable.clicked.connect(self.plot_enable)
+        self.pushButton_saveData.clicked.connect(self.save_data)
 
         print("调用Plot初始化函数")
 
@@ -50,6 +55,7 @@ class Plot(Camera_Thread, Motor):
         self.graphicsView_F.setBackground('w')
         self.graphicsView_x.setBackground('w')
         self.graphicsView_y.setBackground('w')
+        self.graphicsView_F_2.setBackground('w')
 
     def clear_curve(self):
         """
@@ -82,6 +88,7 @@ class Plot(Camera_Thread, Motor):
                 self.curve_y = self.graphicsView_y.plot(self.img_y_plot)
 
                 self.curve_F = self.graphicsView_F.plot(self.img_F_plot)
+                self.curve_strain = self.graphicsView_F_2.plot(self.img_strain_plot)
 
                 ## 打开时钟信号
                 self.timer_plot.start(50)
@@ -102,22 +109,18 @@ class Plot(Camera_Thread, Motor):
         pass
 
     def update_data(self):
-        ## motor1
-        # self.data_motor1=self.ser_motor1.receivedata()
-        # self.data_motor1 = self.ser_motor1.receive
-        # print(self.data_motor1)
-        ## motor2
-        # self.data_motor2=self.ser_motor2.receivedata()
-        # self.data_motor2 = self.ser_motor2.receive
-        dt_ms = datetime.datetime.now().strftime('---%Y-%m-%d %H:%M:%S.%f')
-        # print('\r\n'+self.data_motor2,end='\r\n')
+        dt_ms = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S.%f ')
+        data_save_tmp = dt_ms
         if self.data_motor1:
             ## 串口格式转换
             self.data_motor1 = self.data_motor1.replace('\r', '')
             self.data_motor1 = self.data_motor1.replace('1TP', '')
+
             # 位置显示
             self.label_distance_Motor1.setText(self.data_motor1)
             self.data_motor1 = float(self.data_motor1)
+            # 添加保存
+            data_save_tmp += 'Motor1-' + str(self.data_motor1) + ' '
 
             if len(self.motor1_plot) < 150:
                 self.curve_motor1.setData(self.motor1_plot)
@@ -140,6 +143,8 @@ class Plot(Camera_Thread, Motor):
                 # self.save_data.write(self.data_motor2 + dt_ms + '\n')
                 self.label_distance_Motor2.setText(self.data_motor2)
                 self.data_motor2 = float(self.data_motor2)
+                # 添加保存
+                data_save_tmp += 'Motor2-' + str(self.data_motor2) + ' '
                 #   绘制图形
                 if len(self.motor2_plot) < 150:
                     self.curve_motor2.setData(self.motor2_plot)
@@ -151,6 +156,8 @@ class Plot(Camera_Thread, Motor):
                     # 数据填充到绘制曲线中
                     self.curve_motor２.setData(self.motor2_plot)
         # 图形 x轴坐标
+        # 添加保存
+        data_save_tmp += 'ImgX-' + str(self.cx) + ' '
         if len(self.img_x_plot) < 150:
             self.curve_x.setData(self.img_x_plot)
             # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
@@ -166,6 +173,8 @@ class Plot(Camera_Thread, Motor):
             # 数据填充到绘制曲线中
             self.curve_x.setData(self.img_x_plot)
         # 图形 y轴坐标
+        # 添加保存
+        data_save_tmp += 'ImgY-' + str(self.cy) + ' '
         if len(self.img_y_plot) < 150:
             self.curve_y.setData(self.img_y_plot)
             # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
@@ -181,19 +190,51 @@ class Plot(Camera_Thread, Motor):
             # 数据填充到绘制曲线中
             self.curve_y.setData(self.img_y_plot)
         # 力图像
+            # 添加保存
+            temp_F = (self.cx - self.x_center) * self.k_F
+            temp_strain = (self.cx - self.x_center) * self.pixel_to_distance
+            data_save_tmp += 'F-' + str(temp_F) + ' '
+            data_save_tmp += 'Strain-' + str(temp_strain)+'\n'
         if len(self.img_F_plot) < 150:
             self.curve_F.setData(self.img_F_plot)
+            self.curve_strain.setData(self.img_strain_plot)
             temp_F = (self.cx - self.x_center) * self.k_F
+            temp_strain = (self.cx-self.x_center)*self.pixel_to_distance
             # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
             if abs(temp_F - self.img_F_plot[-1]) < 1 * self.k_F:
                 self.img_F_plot = np.append(self.img_F_plot, self.img_F_plot[-1])
+                self.img_strain_plot = np.append(self.img_strain_plot,self.img_strain_plot[-1])
             else:
                 self.img_F_plot = np.append(self.img_F_plot, temp_F)
+                self.img_strain_plot = np.append(self.img_strain_plot,temp_strain)
 
         else:
             temp_F = (self.cx - self.x_center) * self.k_F
+            temp_strain = (self.cx - self.x_center) * self.pixel_to_distance
             self.img_F_plot[:-1] = self.img_F_plot[1:]
+            self.img_strain_plot[:-1]=self.img_strain_plot[1:]
             if abs(temp_F - self.img_F_plot[-1]) > 1 * self.k_F:
                 self.img_F_plot[-1] = temp_F
+                self.img_strain_plot[-1] = temp_strain
             # 数据填充到绘制曲线中
             self.curve_F.setData(self.img_F_plot)
+            self.curve_strain.setData(self.img_strain_plot)
+        # 保存数据
+        if self.flag_save:
+            self.file.write(data_save_tmp)
+
+    def save_data(self):
+        if not self.flag_save:
+            self.flag_save = True
+            self.pushButton_saveData.setText("Recording")
+            path = "Data\\"
+            name = time.strftime("%m_%d_%H_%M_%S", time.localtime())
+            path_name = path + name + '.txt'
+            self.file = open(path_name, 'w')
+
+            # print(path_name)
+
+        else:
+            self.flag_save = False
+            self.pushButton_saveData.setText("Save File")
+            self.file.close()

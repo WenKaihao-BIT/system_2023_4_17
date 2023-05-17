@@ -12,9 +12,12 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
     # 自定义信号声明
     # 使用自定义信号和UI主线程通讯，参数是发送信号时附带参数的数据类型，可以是str、int、list等
     Signal_Camera = pyqtSignal(str)
+    Signal_finished = pyqtSignal(str)
 
     def __init__(self):
         super(Camera_Thread, self).__init__()
+        # run函数的flag
+        self.flag_run=False
         self.Camera_Parameter = None
         self.cap_video = None
         self.Camera_ID = '0'
@@ -27,7 +30,7 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         self.x_center = 400
         self.y_center = 400
         # 此处K包含两部分（像素->距离，距离->力）
-        self.pixel_to_distance = 10  # 单位为微牛
+        self.pixel_to_distance = 10  # 单位为微米
         # 距离->力的比例系数
         self.distance_to_F = 0.6  # 单位为微牛/微米
         self.k_F = self.pixel_to_distance * self.distance_to_F
@@ -37,6 +40,9 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         # MainWindow = QMainWindow()
         # self.setupUi(MainWindow)
         self.Camera_buttun()
+        # 触发信号
+        self.Signal_Camera.connect(self.show_vedio)
+        self.Signal_finished.connect(self.finish)
         print("调用Camera-Thread初始化函数")
 
     def Camera_buttun(self):
@@ -99,11 +105,12 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
 
         :return: None
         """
-        while True:
+        self.flag_run = False
+        while not self.flag_run:
             time.sleep(0.05)
             self.Signal_Camera.emit("Camera Running")
         pass
-
+        self.Signal_finished.emit("finish")
     def OpenCamera(self):
         """
         打开相机
@@ -113,24 +120,26 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
         if not self.flag_camera:
             # 打开相机
             self.cap_video = cv2.VideoCapture(int(self.Camera_ID))  # 可注释cv2.CAP_DSHOW
-            # 触发信号
-            self.Signal_Camera.connect(self.show_vedio)
+
             # 开启进程
             self.start()
-            self.flag_camera = True
             self.pushButton_camera.setText("Close")
             self.label_information.setText("camera open success!")
+            self.flag_camera = True
         else:
+            # stop 进程
+            self.flag_run = True
             # 关闭相机进程
-            self.cap_video.release()
-            self.exec()
             self.label_image1.clear()
             self.label_image2.clear()
+            self.cap_video.release()
             self.pushButton_camera.setText("Open")
-            self.flag_camera = False
             self.label_information.setText("close success!")
+            self.flag_camera = False
+            self.flag_run = False
         pass
-
+    def finish(self):
+        print("finish")
     def show_vedio(self, msg):
         """
         显示显微镜视野中的图形
@@ -144,8 +153,8 @@ class Camera_Thread(QThread, Ui_MainWindow):  # 必须继承QTread
             self.show_cv_img(self.img)
             self.image_processing(self.img)
         else:
-            self.label_information.setText("Failed to open the camera, please check the connection")
-            self.pushButton_camera.setText("Open")
+            self.label_information.setText("No Camera")
+            # self.pushButton_camera.setText("Open")
 
     def show_cv_img(self, img):
         """

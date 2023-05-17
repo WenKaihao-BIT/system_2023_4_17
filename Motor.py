@@ -15,7 +15,7 @@ class Motor(Ui_MainWindow):
         super(Motor, self).__init__()
         ## motor
         self.step_motor1 = 0.1
-        self.step_motor2 = 0.1
+        self.step_motor2 = '0.1,5'
         self.flag_motor1 = False
         self.flag_motor2 = False
         self.motor1_position = np.array([0])
@@ -119,13 +119,15 @@ class Motor(Ui_MainWindow):
             self.ser_motor1.senddata(ser_motor1_send)
             self.label_information.setText("Motor1 move: -" + str(self.step_motor1))
         if chekbox.id == 'motor2_StepADD':
-            pos_and_v = str(self.step_motor2)
-            temp = 'MOVEINC ' + pos_and_v[0] + pos_and_v[1]
+            pos_and_v = str(self.step_motor2).split(',')
+            temp = 'MOVEINC ' + pos_and_v[0] + ' ' + pos_and_v[1]
             ser_motor2_send = temp + '<' + self.checksum(temp) + '>\r'
             self.ser_motor2.senddata(ser_motor2_send)
-            self.label_information.setText("Motor2 move:" + str(self.step_motor2))
+            # print(ser_motor2_send)
+            self.label_information.setText("Motor2 move:" + pos_and_v[0]+" speed:"+pos_and_v[1])
         if chekbox.id == 'motor2_StepReduce':
-            temp = 'MOVEINC -' + pos_and_v[0] + pos_and_v[1]
+            pos_and_v = str(self.step_motor2).split(',')
+            temp = 'MOVEINC -' + pos_and_v[0] + ' ' + pos_and_v[1]
             ser_motor2_send = temp + '<' + self.checksum(temp) + '>\r'
             self.ser_motor2.senddata(ser_motor2_send)
             self.label_information.setText("Motor2 move:-" + str(self.step_motor2))
