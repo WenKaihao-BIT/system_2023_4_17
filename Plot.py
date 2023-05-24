@@ -68,6 +68,7 @@ class Plot(Camera_Thread, Motor):
         self.graphicsView_x.plot(clear='clear')
         self.graphicsView_y.plot(clear='clear')
         self.graphicsView_F.plot(clear='clear')
+        self.graphicsView_F_2.plot(clear='clear')
 
     def plot_enable(self):
         if self.flag_motor1 and self.flag_motor2:
