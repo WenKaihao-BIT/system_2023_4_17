@@ -25,8 +25,8 @@ from window_ui import *
 from Motor import *
 from Plot import Plot
 from ControlFunction import ControlFunction
-
-class MyMainWindow(Plot,ControlFunction, Camera_Thread, Motor, Ui_MainWindow):
+from F_control import F_control
+class MyMainWindow(F_control,Plot,ControlFunction, Camera_Thread, Motor, Ui_MainWindow):
     def __init__(self, MainWindow):
         self.timer_send = QtCore.QTimer()  # 串口位置询问定时器
         self.setupUi(MainWindow)  # 启动Ui
