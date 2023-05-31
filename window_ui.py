@@ -1130,7 +1130,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.label_33.setText(_translate("MainWindow", "Dalay ms"))
         self.lineEdit_F.setText(_translate("MainWindow", "1"))
         self.label_27.setText(_translate("MainWindow", "Amplitude"))
-        self.checkBox_Adaptive.setText(_translate("MainWindow", "Strat"))
+        self.checkBox_Adaptive.setText(_translate("MainWindow", "Start"))
         self.label_Ratio.setText(_translate("MainWindow", "Ratio"))
         self.lineEdit_Ratio.setText(_translate("MainWindow", "0.1"))
         self.Widget_Panel.setTabText(self.Widget_Panel.indexOf(self.tab_10), _translate("MainWindow", "Adaptive  Control"))
