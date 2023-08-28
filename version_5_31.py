@@ -26,12 +26,14 @@ from Motor import *
 from Plot import Plot
 from ControlFunction import ControlFunction
 from F_control import F_control
-class MyMainWindow(F_control,Plot,ControlFunction, Camera_Thread, Motor, Ui_MainWindow):
+# class MyMainWindow(Plot,ControlFunction, Camera_Thread, Motor, Ui_MainWindow):
+class MyMainWindow(F_control, ControlFunction):
     def __init__(self, MainWindow):
         self.timer_send = QtCore.QTimer()  # 串口位置询问定时器
         self.setupUi(MainWindow)  # 启动Ui
         super(MyMainWindow, self).__init__()
         # self.button_connect()
+        print('调用MyMainWindow初始化函数')
 
 
 if __name__ == '__main__':

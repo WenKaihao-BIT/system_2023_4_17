@@ -5,6 +5,7 @@ from ClassSer import *
 import time
 import datetime
 from operator import xor
+
 matplotlib.use('TkAgg')
 
 
@@ -43,9 +44,24 @@ def sin_wave_cmd(file_add, A, f, fs, phi, b, t):
     # plot_image(" sinx ", x, y)
     for i in range(x.size):
         if (abs(v[i] - 0.0) < 0.0001):
-            msg = "MOVEABS %.3f 0.1 \n" % (y[i + 1])
+            # msg = "MOVEABS %.3f 0.1 \n" % (y[i])
+            msg = "MOVEABS %.3f 5 \n" % (y[i])
         else:
-            msg = "MOVEABS %.3f %.3f \n" % (y[i], abs(v[i]))
+            # msg = "MOVEABS %.3f %.3f \n" % (y[i], abs(v[i]))
+            msg = "MOVEABS %.3f 5 \n" % (y[i])
+        file.write(msg)
+        wave.append(msg)
+    file.close()
+    return wave
+
+
+def sin_wave_cmd_F(file_add, A, f, fs, phi, b, t):
+    file = open(file_add, 'w')
+    y, v = sin_wave(A, f, fs, phi, t, b)
+    x = np.arange(0, t, 1 / fs)
+    wave = []
+    for i in range(x.size):
+        msg = "%.0f\n" % (y[i])
         file.write(msg)
         wave.append(msg)
     file.close()
@@ -76,7 +92,7 @@ def sin_wave_user_cmd(file_add, t):
     return wave
 
 
-def sin_wave_sin_F_swap(file_add):
+def sin_wave_sin_F_swap(file_add,A,D,B):
     file = open(file_add, 'w')
     dt = 1 / 20
     # x = np.arange(0, t, dt)
@@ -85,50 +101,49 @@ def sin_wave_sin_F_swap(file_add):
     v = np.array([0])
     y = np.array([0])
     for i in np.arange(0.1, 5, 0.1):
-        yi, vi = sin_wave(0.1, i, 1 / dt, 0, 3 / i, 0)
-        y=np.append(y, yi)
-        v=np.append(v,vi)
+        yi, vi = sin_wave(A, i, 1 / dt, D, 5 / i, B)
+        y = np.append(y, yi)
+        v = np.append(v, vi)
 
-    x=np.arange(0,len(y))*dt
-    plot_image("sin_F_swap",x,y)
+    x = np.arange(0, len(y)) * dt
+    plot_image("sin_F_swap", x, y)
     plot_image("sin_F_swap", x, v)
     wave = []
     for i in range(x.size):
-        if (abs(v[i] - 0.0) < 0.0001):
-            msg = "MOVEABS %.3f 0.1 \n" % (y[i + 1])
-        else:
-            msg = "MOVEABS %.3f %.3f \n" % (y[i], abs(v[i]))
+        msg = "MOVEABS %.3f 5 \n" % (y[i])
         file.write(msg)
         wave.append(msg)
     file.close()
     return wave
 
-def mseq(coef,file_add,L=100,dt=1/50):
+
+def mseq(coef, file_add, L=100, dt=1 / 50):
     file = open(file_add, 'w')
     st = coef
-    backQ = xor(coef[-1],coef[-2])
+    backQ = xor(coef[-1], coef[-2])
     result = [int(backQ)]
     temp = []
     temp.extend(st[:-1])
-    temp.insert(0,int(backQ))
+    temp.insert(0, int(backQ))
     for i in range(0, L):
-        backQ = xor(temp[-1],temp[-2])
+        backQ = xor(temp[-1], temp[-2])
         result.append(int(backQ))
         temp = temp[:-1]
-        temp.insert(0,int(backQ))
+        temp.insert(0, int(backQ))
     x = np.arange(0, len(result)) * dt
     # print(result)
     plot_image("M", x, result)
     wave = []
     for i in range(x.size):
         if result[i]:
-            msg = "MOVEABS 0.05 5.0 \n"*50
+            msg = "MOVEABS 0.05 5.0 \n" * 50
         else:
-            msg = "MOVEABS -0.05 5.0 \n"*50
+            msg = "MOVEABS -0.05 5.0 \n" * 50
         file.write(msg)
         wave.append(msg)
     file.close()
     return wave
+
 
 if __name__ == '__main__':
     # file_add="D:\PY_Project\python_2022_8_3\sin_wave_cmd.txt"
@@ -141,6 +156,3 @@ if __name__ == '__main__':
     # mseq([1,0,1,0,1,1,0,0,0,0,1], file_add,L=100, dt=1/50)
     # msg="MOVEABS 0.05 5.0 \n"*10
     # print(msg)
-
-
-

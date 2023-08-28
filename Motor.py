@@ -7,9 +7,10 @@
 from window_ui import *
 from ClassSer import *
 import numpy as np
+from Send_Thread import *
 
 
-class Motor(Ui_MainWindow):
+class Motor(Ui_MainWindow, SendRequest, ReceiveData):
 
     def __init__(self):
         super(Motor, self).__init__()
@@ -18,11 +19,13 @@ class Motor(Ui_MainWindow):
         self.step_motor2 = '0.1,5'
         self.flag_motor1 = False
         self.flag_motor2 = False
+        self.flag_CenterSet_Motor2 = False
         self.motor1_position = np.array([0])
         self.motor2_position = np.array([0])
         self.ser_motor1 = serial_port()
-        self.ser_motor2 = serial_port()
+        # self.ser_motor2 = serial_port()
         self.Motor_buttun()
+        self.MCenter = 0
         # 设置位置读取时钟
         self.timer_ReadPosition = QtCore.QTimer()
         self.timer_ReadPosition.timeout.connect(self.position_request)
@@ -34,55 +37,60 @@ class Motor(Ui_MainWindow):
 
         :return: None
         """
-        self.Camera_Parameter = {'motor1_BandRate': self.comboBox, 'motor2_BandRate': self.comboBox_2,
-                                 'motor1_COM': self.spinBox_Motor1_select, 'motor2_COM': self.spinBox_Motor2_select,
-                                 'motor1_enable': self.checkBox_Motor1, 'motor2_enable': self.checkBox_Motor2,
-                                 'motor1_StepADD': self.pushButton_Motor1_Add,
-                                 'motor1_StepReduce': self.pushButton_Motor1_Reduce,
-                                 'motor2_StepADD': self.pushButton_Motor2_Add,
-                                 'motor2_StepReduce': self.pushButton_Motor2_Reduce,
-                                 'motor1_step': self.lineEdit_Motor1, 'motor2_step': self.lineEdit_Motor2}
+        self.Motor_Parameter = {'motor1_BandRate': self.comboBox, 'motor2_BandRate': self.comboBox_2,
+                                'motor1_COM': self.spinBox_Motor1_select, 'motor2_COM': self.spinBox_Motor2_select,
+                                'motor1_enable': self.checkBox_Motor1, 'motor2_enable': self.checkBox_Motor2,
+                                'motor1_StepADD': self.pushButton_Motor1_Add,
+                                'motor1_StepReduce': self.pushButton_Motor1_Reduce,
+                                'motor2_StepADD': self.pushButton_Motor2_Add,
+                                'motor2_StepReduce': self.pushButton_Motor2_Reduce,
+                                'motor1_step': self.lineEdit_Motor1, 'motor2_step': self.lineEdit_Motor2,
+                                'motor2_center': self.pushButton_CenterSet_Motor2}
         # 波特率
-        self.Camera_Parameter['motor1_BandRate'].id = 'motor1_BandRate'
-        self.Camera_Parameter['motor1_BandRate'].addItems(['115200', '57600', '38400', '19200', '9600'])
-        self.Camera_Parameter['motor1_BandRate'].currentIndexChanged[str].connect(self.ChangeParameter)
+        self.Motor_Parameter['motor1_BandRate'].id = 'motor1_BandRate'
+        self.Motor_Parameter['motor1_BandRate'].addItems(['115200', '57600', '38400', '19200', '9600'])
+        self.Motor_Parameter['motor1_BandRate'].currentIndexChanged[str].connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor2_BandRate'].id = 'motor2_BandRate'
-        self.Camera_Parameter['motor2_BandRate'].addItems(['115200', '57600', '38400', '19200', '9600'])
-        self.Camera_Parameter['motor2_BandRate'].currentIndexChanged[str].connect(self.ChangeParameter)
+        self.Motor_Parameter['motor2_BandRate'].id = 'motor2_BandRate'
+        self.Motor_Parameter['motor2_BandRate'].addItems(['115200', '57600', '38400', '19200', '9600'])
+        self.Motor_Parameter['motor2_BandRate'].currentIndexChanged[str].connect(self.ChangeParameter)
         # 串口选择
-        self.Camera_Parameter['motor1_COM'].id = 'motor1_COM'
-        self.Camera_Parameter['motor1_COM'].valueChanged['QString'].connect(self.ChangeParameter)
+        self.Motor_Parameter['motor1_COM'].id = 'motor1_COM'
+        self.Motor_Parameter['motor1_COM'].valueChanged['QString'].connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor2_COM'].id = 'motor2_COM'
-        self.Camera_Parameter['motor2_COM'].valueChanged['QString'].connect(self.ChangeParameter)
+        self.Motor_Parameter['motor2_COM'].id = 'motor2_COM'
+        self.Motor_Parameter['motor2_COM'].valueChanged['QString'].connect(self.ChangeParameter)
 
         # 电机使能
-        self.Camera_Parameter['motor1_enable'].id = 'motor1_enable'
-        self.Camera_Parameter['motor1_enable'].stateChanged.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor1_enable'].id = 'motor1_enable'
+        self.Motor_Parameter['motor1_enable'].stateChanged.connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor2_enable'].id = 'motor2_enable'
-        self.Camera_Parameter['motor2_enable'].stateChanged.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor2_enable'].id = 'motor2_enable'
+        self.Motor_Parameter['motor2_enable'].stateChanged.connect(self.ChangeParameter)
 
         # 电机增量式位移
-        self.Camera_Parameter['motor1_StepADD'].id = 'motor1_StepADD'
-        self.Camera_Parameter['motor1_StepADD'].clicked.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor1_StepADD'].id = 'motor1_StepADD'
+        self.Motor_Parameter['motor1_StepADD'].clicked.connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor2_StepADD'].id = 'motor2_StepADD'
-        self.Camera_Parameter['motor2_StepADD'].clicked.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor2_StepADD'].id = 'motor2_StepADD'
+        self.Motor_Parameter['motor2_StepADD'].clicked.connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor1_StepReduce'].id = 'motor1_StepReduce'
-        self.Camera_Parameter['motor1_StepReduce'].clicked.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor1_StepReduce'].id = 'motor1_StepReduce'
+        self.Motor_Parameter['motor1_StepReduce'].clicked.connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor2_StepReduce'].id = 'motor2_StepReduce'
-        self.Camera_Parameter['motor2_StepReduce'].clicked.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor2_StepReduce'].id = 'motor2_StepReduce'
+        self.Motor_Parameter['motor2_StepReduce'].clicked.connect(self.ChangeParameter)
 
         # 读取电机增量
-        self.Camera_Parameter['motor1_step'].id = 'motor1_step'
-        self.Camera_Parameter['motor1_step'].editingFinished.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor1_step'].id = 'motor1_step'
+        self.Motor_Parameter['motor1_step'].editingFinished.connect(self.ChangeParameter)
 
-        self.Camera_Parameter['motor2_step'].id = 'motor2_step'
-        self.Camera_Parameter['motor2_step'].editingFinished.connect(self.ChangeParameter)
+        self.Motor_Parameter['motor2_step'].id = 'motor2_step'
+        self.Motor_Parameter['motor2_step'].editingFinished.connect(self.ChangeParameter)
+
+        # 电机中心位置设置
+        self.Motor_Parameter['motor2_center'].id = 'motor2_center'
+        self.Motor_Parameter['motor2_center'].clicked.connect(self.ChangeParameter)
 
     def ChangeParameter(self):
         chekbox = self.sender()
@@ -122,15 +130,16 @@ class Motor(Ui_MainWindow):
             pos_and_v = str(self.step_motor2).split(',')
             temp = 'MOVEINC ' + pos_and_v[0] + ' ' + pos_and_v[1]
             ser_motor2_send = temp + '<' + self.checksum(temp) + '>\r'
-            self.ser_motor2.senddata(ser_motor2_send)
-            # print(ser_motor2_send)
-            self.label_information.setText("Motor2 move:" + pos_and_v[0]+" speed:"+pos_and_v[1])
+            self.request_msg(ser_motor2_send)
+            self.label_information.setText("Motor2 move:" + pos_and_v[0] + " speed:" + pos_and_v[1])
         if chekbox.id == 'motor2_StepReduce':
             pos_and_v = str(self.step_motor2).split(',')
             temp = 'MOVEINC -' + pos_and_v[0] + ' ' + pos_and_v[1]
             ser_motor2_send = temp + '<' + self.checksum(temp) + '>\r'
-            self.ser_motor2.senddata(ser_motor2_send)
+            self.request_msg(ser_motor2_send)
             self.label_information.setText("Motor2 move:-" + str(self.step_motor2))
+        if chekbox.id == 'motor2_center':
+            self.CenterSet2()
 
     def EnableMotor1(self, state):
         if not state:
@@ -149,6 +158,7 @@ class Motor(Ui_MainWindow):
             else:
                 self.label_information.setText("Motor1 enable fail !")
         # print(self.flag_motor1)
+
     def EnableMotor2(self, state):
         if not state:
             # if self.flag_motor2:
@@ -188,31 +198,44 @@ class Motor(Ui_MainWindow):
 
         :return: None
         """
-        # self.ser_motor1.send = '1TP?\r'
         self.ser_motor1.senddata('1TP?\r')
         self.data_motor1 = self.ser_motor1.receivedata()
-        # print(self.data_motor1)
-        # self.ser_motor2.send = 'PFB<D8>\r'
         # self.ser_motor2.senddata('PFB<D8>\r')
-        self.ser_motor2.senddata('PFB<D8>\r')
-        # self.data_motor2 = self.ser_motor2.receivedata()
-        # time.sleep(0.01)
-        self.data_motor2 = self.ser_motor2.receivedata()
-        data_motor2_temp = self.DataAnlysis(self.data_motor2, 'PFB<D8>')
-        print('\n\n' + self.data_motor2 + '\n' + self.data_motor2.encode().hex() + '\n' + data_motor2_temp + '\n\n')
-        # print('\n\n'+self.data_motor2+'\n\n')
 
-    def DataAnlysis(self, data, head):
-        data2 = data.split('\n')
-        matched_index = -1
-        i = 0
-        length = len(data2)
-        while i < length:
-            if head + '\r' == data2[i]:
-                matched_index = i
-                break
-            i = i + 1
-        if matched_index != -1:
-            data3 = data2[matched_index + 1].split(' ')[0]
-            return data3
-        return 'error'
+        # self.data_motor2 = self.ser_motor2.receivedata()
+        # self.data_motor2 = "PFB<D8>\r\n0.212 [mm]\r\n"
+
+    # def DataAnlysis(self, data, head):
+    #     data2 = data.split('\n')
+    #     matched_index = -1
+    #     i = 0
+    #     length = len(data2)
+    #     while i < length:
+    #         if head + '\r' == data2[i]:
+    #             matched_index = i
+    #             break
+    #         i = i + 1
+    #     if matched_index != -1:
+    #         data3 = data2[matched_index + 1].split(' ')[0]
+    #         return data3
+    #     return 'error'
+
+    def CenterSet2(self):
+        """
+        设置位移中心
+
+        :return: None
+        """
+        if not self.flag_CenterSet_Motor2:
+            self.flag_CenterSet_Motor2 = True
+            # self.MCenter = float(self.DataAnlysis(self.data_motor2, 'PFB<D8>'))
+            # print(self.data_motor2)
+            self.MCenter = float(self.Motor2_position)
+            self.label_Center_2.setText('[' + str(self.MCenter) + ']')
+            self.pushButton_CenterSet_Motor2.setText("Setting")
+            self.label_information.setText("Setting Center!")
+        else:
+            self.flag_CenterSet_Motor2 = False
+            self.pushButton_CenterSet_Motor2.setText("Set")
+            self.label_information.setText("Unset Center!")
+        pass
