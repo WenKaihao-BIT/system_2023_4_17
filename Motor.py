@@ -8,6 +8,7 @@ from window_ui import *
 from ClassSer import *
 import numpy as np
 from Send_Thread import *
+from MPC_control.MPCWithObserver import *
 
 
 class Motor(Ui_MainWindow, SendRequest, ReceiveData):
@@ -205,20 +206,6 @@ class Motor(Ui_MainWindow, SendRequest, ReceiveData):
         # self.data_motor2 = self.ser_motor2.receivedata()
         # self.data_motor2 = "PFB<D8>\r\n0.212 [mm]\r\n"
 
-    # def DataAnlysis(self, data, head):
-    #     data2 = data.split('\n')
-    #     matched_index = -1
-    #     i = 0
-    #     length = len(data2)
-    #     while i < length:
-    #         if head + '\r' == data2[i]:
-    #             matched_index = i
-    #             break
-    #         i = i + 1
-    #     if matched_index != -1:
-    #         data3 = data2[matched_index + 1].split(' ')[0]
-    #         return data3
-    #     return 'error'
 
     def CenterSet2(self):
         """
@@ -239,3 +226,7 @@ class Motor(Ui_MainWindow, SendRequest, ReceiveData):
             self.pushButton_CenterSet_Motor2.setText("Set")
             self.label_information.setText("Unset Center!")
         pass
+
+
+if __name__ == '__main__':
+    a=Motor()

@@ -6,10 +6,11 @@
 # @Description : 这个函数是用来balabalabala自己写
 import matplotlib.pyplot as plt
 
-path = 'Data/08_26_17_30_23.txt'
+path = 'Data/09_18_21_35_01.txt'
 delimiter = '@'
-dt = 0.03
+dt = 0.06
 time = [0]
+Time = []
 pixel_to_distance = 5
 L0 = 2
 Motor1 = []
@@ -38,11 +39,12 @@ for line in content:
         continue
     # time.append(round(time[-1]+dt,2))
     # print(data[5])
+    Time.append(float(data[0]))
     Motor1.append(float(data[1].split(delimiter)[1]))
     Motor2.append(float(data[2].split(delimiter)[1]))
     ImgX.append(float(data[3].split(delimiter)[1]))
     ImgY.append(float(data[4].split(delimiter)[1]))
-    F.append(float(data[5].split(delimiter)[1]))
+    F.append(float(data[5].split(delimiter)[1])+5)
     # F.append((float(data[5].split(delimiter)[1]))/0.6*13)
     strain.append(float(data[6].split(delimiter)[1]))
     # print(data)
@@ -66,7 +68,7 @@ for i in range(0, length - 1):
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, Motor2)
+ax.plot(Time, Motor2)
 ax.set(title='Pic-1:Motor2-Position',
        ylabel='x / mm', xlabel='time / s')
 
@@ -75,7 +77,7 @@ ax.set(title='Pic-1:Motor2-Position',
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, F, color='black', linewidth=1)
+ax.plot(Time, F, color='black', linewidth=1)
 ax.set(title='Pic-2:F', ylabel='F / uN', xlabel='time/s')
 
 # 绘制测量探针移动图
@@ -83,7 +85,7 @@ ax.set(title='Pic-2:F', ylabel='F / uN', xlabel='time/s')
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, ImgX, color='black', linewidth=1)
+ax.plot(Time, ImgX, color='black', linewidth=1)
 ax.set(title='Pic-3:ImgX', ylabel='pixel', xlabel='time / s')
 
 for i in range(1, length):
@@ -96,15 +98,15 @@ for i in range(1, length):
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, Move_Motor2, color='blue', linewidth=1)
-ax.plot(time, Move_ImgX, color='red', linewidth=1)
+ax.plot(Time, Move_Motor2, color='blue', linewidth=1)
+ax.plot(Time, Move_ImgX, color='red', linewidth=1)
 ax.set(title='Pic-4:Move-ImgX', ylabel='x / mm', xlabel='time / s')
 
 # 产生一张画布
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, strain, color='black', linewidth=1)
+ax.plot(Time, strain, color='black', linewidth=1)
 ax.set(title='Pic-5:Strain', ylabel='strain ', xlabel='time / s')
 plt.show()
 
@@ -131,13 +133,13 @@ for i in range(1, length):
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, E, color='black', linewidth=1)
+ax.plot(Time, E, color='black', linewidth=1)
 ax.set(title='Pic-7:E', ylabel='E / kPa', xlabel='time / s')
 # 产生一张画布
 fig = plt.figure()
 # 设置图的位置 111表示 1x1的第一个
 ax = fig.add_subplot(111)
-ax.plot(time, Dd, color='black', linewidth=1)
+ax.plot(Time, Dd, color='black', linewidth=1)
 ax.set(title='Pic-8:Displacement difference', ylabel='x / mm', xlabel='time / s')
 
 plt.show()

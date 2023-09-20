@@ -85,6 +85,7 @@ class ControlFunction(Motor):
             # 发送指令
             file_add = "sin_cmd\sin_wave_cmd.txt"
             self.wave = sin_wave_cmd(file_add, self.sin_A, self.sin_F, 50, self.sin_D, self.sin_B, 100)
+
             self.wave_len = len(self.wave)
             self.label_information.setText("sin is running")
         elif state == QtCore.Qt.Unchecked:

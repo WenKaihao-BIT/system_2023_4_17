@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1445</width>
+    <width>1506</width>
     <height>870</height>
    </rect>
   </property>
@@ -334,7 +334,7 @@
                  <enum>QTabWidget::Rounded</enum>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <widget class="QWidget" name="tab_7">
                  <attribute name="title">
@@ -1826,7 +1826,7 @@
                 </widget>
                 <widget class="QWidget" name="tab">
                  <attribute name="title">
-                  <string>F_control</string>
+                  <string>F_control_PID</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_16">
                   <item row="0" column="0">
@@ -2269,6 +2269,599 @@
                   </item>
                  </layout>
                 </widget>
+                <widget class="QWidget" name="tab_2">
+                 <attribute name="title">
+                  <string>F_control_MPC</string>
+                 </attribute>
+                 <widget class="QWidget" name="">
+                  <property name="geometry">
+                   <rect>
+                    <x>5</x>
+                    <y>1</y>
+                    <width>681</width>
+                    <height>341</height>
+                   </rect>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_19">
+                   <item row="0" column="3">
+                    <widget class="QLabel" name="label_F_Target_10">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>80</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>R</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="4">
+                    <widget class="QLabel" name="label_F_Target_11">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>80</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>V</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLineEdit" name="lineEdit_F_target_2">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>20</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1" colspan="2">
+                    <widget class="QLineEdit" name="lineEdit_MPC_Q">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>0.01</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="3">
+                    <widget class="QLineEdit" name="lineEdit_MPC_R">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>10000</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="4">
+                    <widget class="QLineEdit" name="lineEdit_MPC_V">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>10</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0" rowspan="2">
+                    <widget class="QLabel" name="label_F_Target_12">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>80</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Model</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLabel" name="label_F_Target_13">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Ap</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QLineEdit" name="lineEdit_MPC_Ap">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>-0.0122</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QLabel" name="label_F_Target_14">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Bp</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QLineEdit" name="lineEdit_MPC_Bp">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>-90.1341</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLabel" name="label_F_Target_15">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Cp</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QLineEdit" name="lineEdit_MPC_Cp">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>1</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="4" rowspan="2">
+                    <widget class="QPushButton" name="pushButton_MPC_Start">
+                     <property name="minimumSize">
+                      <size>
+                       <width>100</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Run</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QLabel" name="label_F_Target_16">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Dp</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QLineEdit" name="lineEdit_MPC_Dp">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>40</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>18116</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_F_Target_8">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>80</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>F Target</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1" colspan="2">
+                    <widget class="QLabel" name="label_F_Target_9">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>80</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="cursor">
+                      <cursorShape>ArrowCursor</cursorShape>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>Q</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
                 <widget class="QWidget" name="tab_11">
                  <attribute name="title">
                   <string>Data Save</string>
@@ -2398,6 +2991,76 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                   <string>Motor Position</string>
                  </attribute>
                  <layout class="QGridLayout" name="gridLayout_12">
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_position_Motor2">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>81</width>
+                      <height>51</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Box</enum>
+                    </property>
+                    <property name="text">
+                     <string>0</string>
+                    </property>
+                    <property name="scaledContents">
+                     <bool>false</bool>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                    <property name="margin">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="label_distance_Motor1">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>81</width>
+                      <height>51</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::Box</enum>
+                    </property>
+                    <property name="text">
+                     <string>0</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
+                   </widget>
+                  </item>
                   <item row="1" column="1">
                    <widget class="QLabel" name="label_position_Motor1">
                     <property name="sizePolicy">
@@ -2462,46 +3125,8 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1">
-                   <widget class="QLabel" name="label_position_Motor2">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>81</width>
-                      <height>51</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>12</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::Box</enum>
-                    </property>
-                    <property name="text">
-                     <string>0</string>
-                    </property>
-                    <property name="scaledContents">
-                     <bool>false</bool>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                    <property name="margin">
-                     <number>0</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QLabel" name="label_12">
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="label_11">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -2564,8 +3189,8 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="2">
-                   <widget class="QLabel" name="label_11">
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_12">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                       <horstretch>0</horstretch>
@@ -2628,38 +3253,6 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="3">
-                   <widget class="QLabel" name="label_distance_Motor1">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>81</width>
-                      <height>51</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>12</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="frameShape">
-                     <enum>QFrame::Box</enum>
-                    </property>
-                    <property name="text">
-                     <string>0</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </widget>
@@ -2681,7 +3274,7 @@ font: 24pt &quot;Adobe Arabic&quot;;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1445</width>
+     <width>1506</width>
      <height>23</height>
     </rect>
    </property>

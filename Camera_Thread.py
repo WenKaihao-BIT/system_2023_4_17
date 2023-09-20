@@ -202,3 +202,6 @@ class Camera_Thread(Ui_MainWindow):
             self.pushButton_CenterSet.setText("Set")
             self.label_information.setText("Unset Center!")
         pass
+if __name__ == '__main__':
+    ui = Camera_Thread()
+

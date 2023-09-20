@@ -14,6 +14,7 @@ import queue
 
 class SerThread:
     def __init__(self):
+        super(SerThread, self).__init__()
         # 利用一个队列来存储请求
         self.request_queue_lock = threading.Lock()
         self.request_queue = queue.Queue()
@@ -74,7 +75,7 @@ class ReceiveData(SerThread):
         self.end = "[mm]"
         self.Motor2_position = '0'
         self.receiveStart_flag = False
-        print(" ReceiveData初始化")
+        print("ReceiveData初始化")
 
     def ReceiveData_run(self):
         print("ReceiveData Thread Send started")

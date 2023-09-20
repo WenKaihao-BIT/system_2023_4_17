@@ -27,7 +27,7 @@ from Plot import Plot
 from ControlFunction import ControlFunction
 from F_control import F_control
 # class MyMainWindow(Plot,ControlFunction, Camera_Thread, Motor, Ui_MainWindow):
-class MyMainWindow(F_control, ControlFunction):
+class MyMainWindow(F_control):
     def __init__(self, MainWindow):
         self.timer_send = QtCore.QTimer()  # 串口位置询问定时器
         self.setupUi(MainWindow)  # 启动Ui
@@ -40,5 +40,6 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
     ui = MyMainWindow(MainWindow)
+    print(MyMainWindow.mro())
     MainWindow.show()
     sys.exit(app.exec_())

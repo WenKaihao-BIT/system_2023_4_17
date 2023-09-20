@@ -6,19 +6,19 @@ import time
 
 # video = cv2.VideoCapture("01.wmv")
 def FindTarget(frame, threshold_gray=100, threshold_area=10000):
-    # red_lower = np.array([156, 43, 46])
-    # red_upper = np.array([180, 255, 255])
-    # red_lower2 = np.array([0, 43, 46])
-    # red_upper2 = np.array([10, 255, 255])
+    red_lower = np.array([156, 43, 46])
+    red_upper = np.array([180, 255, 255])
+    red_lower2 = np.array([0, 43, 46])
+    red_upper2 = np.array([10, 255, 255])
     blue_lower = np.array([90, 100, 100])
     blue_upper = np.array([120, 255, 255])
     cx = cy = 0
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     # cv2.imshow('hsv', hsv)
-    # mask1 = cv2.inRange(hsv, red_lower, red_upper)
-    # mask2 = cv2.inRange(hsv, red_lower2, red_upper2)
-    # mask = cv2.add(mask1, mask2)
-    mask = cv2.inRange(hsv, blue_lower, blue_upper)
+    mask1 = cv2.inRange(hsv, red_lower, red_upper)
+    mask2 = cv2.inRange(hsv, red_lower2, red_upper2)
+    mask = cv2.add(mask1, mask2)
+    # mask = cv2.inRange(hsv, blue_lower, blue_upper)
     mask = cv2.erode(mask, None, iterations=3)  # 腐蚀操作
     mask = cv2.dilate(mask, None, iterations=3)  # 膨胀操作
     mask = cv2.GaussianBlur(mask, (5, 5), 0)  # 高斯滤波

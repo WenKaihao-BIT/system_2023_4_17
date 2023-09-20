@@ -45,10 +45,10 @@ def sin_wave_cmd(file_add, A, f, fs, phi, b, t):
     for i in range(x.size):
         if (abs(v[i] - 0.0) < 0.0001):
             # msg = "MOVEABS %.3f 0.1 \n" % (y[i])
-            msg = "MOVEABS %.3f 5 \n" % (y[i])
+            msg = "MOVEABS %.3f 8 \n" % (y[i])
         else:
             # msg = "MOVEABS %.3f %.3f \n" % (y[i], abs(v[i]))
-            msg = "MOVEABS %.3f 5 \n" % (y[i])
+            msg = "MOVEABS %.3f 8 \n" % (y[i])
         file.write(msg)
         wave.append(msg)
     file.close()

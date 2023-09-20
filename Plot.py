@@ -9,12 +9,15 @@ import threading
 from PyQt5 import QtCore
 from Motor import Motor
 import numpy as np
-import datetime
 from Camera_Thread import Camera_Thread
+from datetime import datetime, timedelta
+from ControlFunction import ControlFunction
 import time
+class test():
+    def __init__(self):
+        print("test run")
 
-
-class Plot(Camera_Thread, Motor):
+class Plot(Camera_Thread,ControlFunction):
     def __init__(self):
         super(Plot, self).__init__()
         self.curve_F = None
@@ -36,6 +39,8 @@ class Plot(Camera_Thread, Motor):
         self.img_y_plot = np.array([0])
         self.img_F_plot = np.array([0])
         self.img_strain_plot = np.array([0])
+        self.start_time = datetime.now()
+        self.time_array = np.array([0])
 
         self.DataSave = ""
 
@@ -49,7 +54,18 @@ class Plot(Camera_Thread, Motor):
         self.pushButton_saveData.clicked.connect(self.save_data)
         self.start_flag = False
         print("调用Plot初始化函数")
-
+    def plot_init(self):
+        self.data_motor2 = 0
+        self.motor1_plot = np.array([0])
+        self.motor1_position = np.array([0])
+        self.Motor2Plot = np.array([0])
+        self.motor2_position = np.array([0])
+        self.img_x_plot = np.array([0])
+        self.img_y_plot = np.array([0])
+        self.img_F_plot = np.array([0])
+        self.img_strain_plot = np.array([0])
+        self.start_time = datetime.now()
+        self.time_array = np.array([0])
     def background_init(self):
         """
         设置绘制图形的背景
@@ -89,11 +105,14 @@ class Plot(Camera_Thread, Motor):
                 # self.ser_motor2.senddata('en<D3>\r')
                 # 数据清除
                 self.clear_curve()
+
+                # 当前时间
+                self.start_time = datetime.now()
                 # 曲线数据
                 self.curve_motor1 = self.graphicsView_motor1.plot(self.motor1_plot)
                 self.curve_motor2 = self.graphicsView_motor2.plot(self.Motor2Plot)
 
-                self.curve_x = self.graphicsView_x.plot(self.img_x_plot)
+                self.curve_x = self.graphicsView_x.plot(self.time_array, self.img_x_plot)
                 self.curve_y = self.graphicsView_y.plot(self.img_y_plot)
 
                 self.curve_F = self.graphicsView_F.plot(self.img_F_plot)
@@ -107,6 +126,7 @@ class Plot(Camera_Thread, Motor):
                 # self.send_thread.start()
                 self.Send_Receive_start(True)
             else:
+                self.plot_init()
                 # self.SendStart_flag = False
                 self.Send_Receive_start(False)
                 self.pushButton_Enable.setText("Enable")
@@ -127,8 +147,19 @@ class Plot(Camera_Thread, Motor):
 
     def update_data(self):
         self.position_request()
-        dt_ms = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S.%f ')
-        self.DataSave = dt_ms
+        # dt_ms = datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S.%f ')
+        current_time = datetime.now()
+        time_difference_seconds = (current_time - self.start_time).total_seconds()
+        plot_now_time = round(time_difference_seconds, 4)
+        time_difference_formatted = "{:.4f}".format(time_difference_seconds)
+        # print(time_difference_formatted)
+        self.DataSave = time_difference_formatted + ' '
+        if len(self.time_array) < 150:
+            self.time_array = np.append(self.time_array, plot_now_time)
+        else:
+            self.time_array[:-1] = self.time_array[1:]
+            self.time_array[-1] = plot_now_time
+
         if self.data_motor1:
             ## 串口格式转换
             self.data_motor1 = self.data_motor1.replace('\r', '')
@@ -141,66 +172,82 @@ class Plot(Camera_Thread, Motor):
             self.DataSave += 'Motor1@' + str(self.data_motor1) + ' '
 
             if len(self.motor1_plot) < 150:
-                self.curve_motor1.setData(self.motor1_plot)
+
                 self.motor1_plot = np.append(self.motor1_plot, self.data_motor1)
-                self.motor1_position = np.append(self.motor1_position, self.data_motor1)
+                self.curve_motor1.setData(self.time_array, self.motor1_plot)
+                # self.motor1_position = np.append(self.motor1_position, self.data_motor1)
 
 
             else:
                 self.motor1_plot[:-1] = self.motor1_plot[1:]
                 self.motor1_plot[-1] = self.data_motor1
                 # 数据填充到绘制曲线中
-                self.curve_motor1.setData(self.motor1_plot)
+                self.curve_motor1.setData(self.time_array, self.motor1_plot)
+        else:
+            if len(self.motor1_plot) < 150:
+
+                self.motor1_plot = np.append(self.motor1_plot, 0)
+                self.curve_motor1.setData(self.time_array, self.motor1_plot)
+                # self.motor1_position = np.append(self.motor1_position, self.data_motor1)
+
+
+            else:
+                self.motor1_plot[:-1] = self.motor1_plot[1:]
+                self.motor1_plot[-1] = 0
+                # 数据填充到绘制曲线中
+                self.curve_motor1.setData(self.time_array, self.motor1_plot)
+
         # motor2
         self.PlotMotor2()
         # 图形 x轴坐标
         # 添加保存
         self.DataSave += 'ImgX@' + str(self.cx) + ' '
         if len(self.img_x_plot) < 150:
-            self.curve_x.setData(self.img_x_plot)
+
             # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
             if abs(self.cx - self.img_x_plot[-1]) < 2:
                 self.img_x_plot = np.append(self.img_x_plot, self.img_x_plot[-1])
             else:
                 self.img_x_plot = np.append(self.img_x_plot, self.cx)
+            self.curve_x.setData(self.time_array, self.img_x_plot)
 
         else:
             self.img_x_plot[:-1] = self.img_x_plot[1:]
             if abs(self.cx - self.img_x_plot[-1]) > 2:
                 self.img_x_plot[-1] = self.cx
             # 数据填充到绘制曲线中
-            self.curve_x.setData(self.img_x_plot)
+            self.curve_x.setData(self.time_array, self.img_x_plot)
         # 图形 y轴坐标
         # 添加保存
         self.DataSave += 'ImgY@' + str(self.cy) + ' '
         if len(self.img_y_plot) < 150:
-            self.curve_y.setData(self.img_y_plot)
+
             # 加入滤波器：根据经验，目标在静态会有一个像素的抖动，据此把低于一个像素视为干扰
             if abs(self.cy - self.img_y_plot[-1]) < 2:
                 self.img_y_plot = np.append(self.img_y_plot, self.img_y_plot[-1])
             else:
                 self.img_y_plot = np.append(self.img_y_plot, self.cy)
+            self.curve_y.setData(self.time_array, self.img_y_plot)
 
         else:
             self.img_y_plot[:-1] = self.img_y_plot[1:]
             if abs(self.cy - self.img_y_plot[-1]) > 2:
                 self.img_y_plot[-1] = self.cy
             # 数据填充到绘制曲线中
-            self.curve_y.setData(self.img_y_plot)
+            self.curve_y.setData(self.time_array, self.img_y_plot)
 
         # 力图像
         # 添加保存
         temp_F = -(self.cx - self.x_center) * self.k_F
         temp_IX = (self.x_center - self.cx) * self.pixel_to_distance / 1000
         temp_X = (self.MCenter - self.Motor2Plot[-1])
-        temp_strain = (temp_X - temp_IX) / 5
+        temp_strain = (temp_X - temp_IX) / 10
         # print(str(temp_IX)+'---'+str(temp_X))
         # temp_strain = (self.motor2_plot[:-1]*1000-(-(self.cx - self.x_center) * self.pixel_to_distance))/10000
         self.DataSave += 'F@' + str(temp_F) + ' '
         self.DataSave += 'Strain@' + str(temp_strain) + '\n'
         if len(self.img_F_plot) < 150:
-            self.curve_F.setData(self.img_F_plot)
-            self.curve_strain.setData(self.img_strain_plot)
+
             # temp_F = -(self.cx - self.x_center) * self.k_F
             # temp_strain = (self.motor2_plot[:-1]*1000-(-(self.cx - self.x_center) * self.pixel_to_distance))/10000
             # temp_strain = (temp_X - temp_IX) / 10
@@ -211,6 +258,8 @@ class Plot(Camera_Thread, Motor):
             else:
                 self.img_F_plot = np.append(self.img_F_plot, temp_F)
                 self.img_strain_plot = np.append(self.img_strain_plot, temp_strain)
+            self.curve_F.setData(self.time_array, self.img_F_plot)
+            self.curve_strain.setData(self.time_array, self.img_strain_plot)
 
         else:
             # temp_F = -(self.cx - self.x_center) * self.k_F
@@ -221,8 +270,8 @@ class Plot(Camera_Thread, Motor):
                 self.img_F_plot[-1] = temp_F
                 self.img_strain_plot[-1] = temp_strain
             # 数据填充到绘制曲线中
-            self.curve_F.setData(self.img_F_plot)
-            self.curve_strain.setData(self.img_strain_plot)
+            self.curve_F.setData(self.time_array, self.img_F_plot)
+            self.curve_strain.setData(self.time_array, self.img_strain_plot)
         # 保存数据
         if self.flag_save:
             self.file.write(self.DataSave)
@@ -235,7 +284,7 @@ class Plot(Camera_Thread, Motor):
             name = time.strftime("%m_%d_%H_%M_%S", time.localtime())
             path_name = path + name + '.txt'
             self.file = open(path_name, 'w')
-
+            self.plot_init()
             # print(path_name)
 
         else:
@@ -269,11 +318,11 @@ class Plot(Camera_Thread, Motor):
         self.data_motor2 = float(self.Motor2_position)
         #   绘制图形
         if len(self.Motor2Plot) < 150:
-            self.curve_motor2.setData(self.Motor2Plot)
             self.Motor2Plot = np.append(self.Motor2Plot, self.data_motor2)
+            self.curve_motor2.setData(self.time_array, self.Motor2Plot)
             # self.motor2_position = np.append(self.motor2_position, self.data_motor2)
         else:
             self.Motor2Plot[:-1] = self.Motor2Plot[1:]
             self.Motor2Plot[-1] = self.data_motor2
             # 数据填充到绘制曲线中
-            self.curve_motor２.setData(self.Motor2Plot)
+            self.curve_motor２.setData(self.time_array, self.Motor2Plot)
