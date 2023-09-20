@@ -1,0 +1,5 @@
+Camera@3
+Motor1Port@7
+Motor1Rate@115200
+Motor2Port@8
+Motor2Rate@115200
